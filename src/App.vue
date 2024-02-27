@@ -1,32 +1,37 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+  <div class="container">
+	<div v-for="(item, index) in componentsList" :key="index" @click="changeTempl(item)">
+		{{item.name}}
+	</div>
+	<component :is='templ'></component>
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+export default {
+	data(){
+		return {
+			componentsList: [
+				{
+					name: 'excel中英文转换',
+					templ: () => import('./component/translateExcel.vue')
+				}
+			],
+			templ: () => import('./component/translateExcel.vue')
+		}
+	},
+	methods: {
+		changeTempl(item){
+			if(this.templ == item.templ) {
+				console.log('一致');
+				return
+			}
+			this.templ = item.templ
+		}
+	}
 }
+</script>
 
-#nav {
-  padding: 30px;
+<style>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
