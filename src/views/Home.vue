@@ -22,7 +22,7 @@ export default {
 				message: "触发一切",
 			}).then(() => {
 				// on close
-				
+				this.vr.loadScene('room') // 加载已有场景
 			});
 		},
 		init() {
