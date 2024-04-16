@@ -1,17 +1,5 @@
 <template>
-	<div id="container">
-		<!-- <div id="vrBox">
-			<div id="controls">
-				<div class="ctrl" @click="vr.setPitch(vr.getPitch() + 10)">&#9650;</div>
-				<div class="ctrl" @click="vr.setPitch(vr.getPitch() - 10)">&#9660;</div>
-				<div class="ctrl" @click="vr.setYaw(vr.getYaw() - 10)">&#9664;</div>
-				<div class="ctrl" @click="vr.setYaw(vr.getYaw() + 10)">&#9654;</div>
-				<div class="ctrl" @click="vr.setHfov(vr.getHfov() - 10)">&plus;</div>
-				<div class="ctrl" @click="vr.setHfov(vr.getHfov() + 10)">&minus;</div>
-				<div class="ctrl" @click="vr.toggleFullscreen()">&#x2922;</div>
-			</div>
-		</div> -->
-	</div>
+	<div id="container"></div>
 </template>
 
 <script>
@@ -25,17 +13,22 @@ export default {
 		this.init();
 	},
 	methods: {
+		testClick(){
+			console.log('------=======>点击触发');
+		},
 		init() {
 			var width = window.innerWidth;
 			var height = window.innerHeight;
 			var container = document.getElementById("container");
 			container.style.width = `${width}px`;
 			container.style.height = `${height}px`;
+			// let _this = this
 			this.vr = window.pannellum.viewer("container", {
 				default: {
 					firstScene: "living", // 设置首次显示场景
-					sceneFadeDuration: 2000, // 场景切换过渡时间
+					// sceneFadeDuration: 2000, // 场景切换过渡时间
 					autoLoad: true, // 自动加载
+					hotSpotDebug: true, // 热点调试
 				},
 				scenes: {
 					// 场景 - 客厅
@@ -51,6 +44,15 @@ export default {
 								text: "进入场景2",
 								type: "scene",
 								sceneId: "room",
+							},
+							{
+								pitch: -14,
+								yaw: -0.49,
+								text: "测试点击",
+								type: "info",
+								clickHandlerFunc: function(e) {
+									console.log('---点击粗发', e);
+								}
 							},
 						],
 					},
@@ -82,9 +84,25 @@ export default {
 					},
 				},
 			});
+			this.vr.on("load", function () {
+				console.log("-------->>>>1.");
+			});
+			this.vr.on("scenechange", function (e) {
+				console.log("-------->>>>2.", e);
+			});
 		},
 	},
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+#container {
+	position: relative;
+	.loading {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		font-size: 30px;
+	}
+}
+</style>
