@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { Dialog } from "vant";
 export default {
 	data() {
 		return {
@@ -13,8 +14,16 @@ export default {
 		this.init();
 	},
 	methods: {
-		testClick(){
-			console.log('------=======>点击触发');
+		showToast() {
+			console.log("------=======>点击触发", this.vr);
+			// Toast.success('点击触发成功')
+			Dialog.alert({
+				title: "看你喜好",
+				message: "触发一切",
+			}).then(() => {
+				// on close
+				
+			});
 		},
 		init() {
 			var width = window.innerWidth;
@@ -35,13 +44,19 @@ export default {
 					living: {
 						sceneId: "living",
 						type: "equirectangular",
-						panorama:
-							"https://img.alicdn.com/imgextra/i2/6000000004217/O1CN01djW9bE1h1QprTMP5d_!!6000000004217-0-hotel.jpg",
+						panorama: require("../../public/vrs2.jpeg"),
 						hotSpots: [
+							// {
+							// 	pitch: -26,
+							// 	yaw: -125,
+							// 	text: "进入场景2",
+							// 	type: "scene",
+							// 	sceneId: "room",
+							// },
 							{
-								pitch: -26,
-								yaw: -125,
-								text: "进入场景2",
+								pitch: 1.12,
+								yaw: -137.6,
+								text: "进店",
 								type: "scene",
 								sceneId: "room",
 							},
@@ -50,9 +65,7 @@ export default {
 								yaw: -0.49,
 								text: "测试点击",
 								type: "info",
-								clickHandlerFunc: function(e) {
-									console.log('---点击粗发', e);
-								}
+								clickHandlerFunc: this.showToast,
 							},
 						],
 					},
