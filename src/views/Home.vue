@@ -8,6 +8,20 @@ export default {
 	data() {
 		return {
 			vr: null,
+			titleArray: [
+				{
+					title: '标题1',
+				},
+				{
+					title: '标题2',
+				},
+				{
+					title: '标题3',
+				},
+				{
+					title: '标题4',
+				},
+			]
 		};
 	},
 	mounted() {
@@ -25,6 +39,18 @@ export default {
 				this.vr.loadScene('room') // 加载已有场景
 			});
 		},
+		domForDialog(){
+			return `
+				<ul>
+					${
+						this.titleArray.map(item=>{
+							return `<li class="dialog-item">${item.title}</li>`
+						}).join('')
+					}
+				</ul>	
+			`
+		},
+
 		init() {
 			var width = window.innerWidth;
 			var height = window.innerHeight;
@@ -63,9 +89,10 @@ export default {
 							{
 								pitch: -14,
 								yaw: -0.49,
-								text: "测试点击",
+								// text: "测试点击",
 								type: "info",
-								clickHandlerFunc: this.showToast,
+								text: this.domForDialog(),
+								// clickHandlerFunc: this.showToast,
 							},
 						],
 					},
@@ -116,6 +143,16 @@ export default {
 		top: 50%;
 		left: 50%;
 		font-size: 30px;
+	}
+
+	::v-deep{
+		.dialog-item{
+			width: 50px;
+			height: 30px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 	}
 }
 </style>
