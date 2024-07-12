@@ -1,54 +1,95 @@
 <template>
-	<div id="container"></div>
+	<div class="home-container">
+		<div id="container"></div>
+		<van-action-sheet v-model="showModal" title="菜单">
+			<div class="modal-content">
+				<div class="goods-item" v-for="(item, index) in goodsList" :key="index">
+					<img class="goods-image" :src="item.img" />
+					<div class="right-info-box">
+						<div>
+							<div class="title">
+								{{ item.detail }}
+							</div>
+							<div class="time">
+								{{ item.serviceTime }}
+							</div>
+						</div>
+						<div class="price-box">
+							<div class="price">
+								<span class="num"><span class="logo">¥</span>{{ item.price }}</span
+								><span class="word">起</span>
+							</div>
+							<div class="bussiness-btn" @click="goDetail(item)">{{ '去下单' }}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</van-action-sheet>
+	</div>
 </template>
 
 <script>
-import { Dialog } from "vant";
 export default {
 	data() {
 		return {
 			vr: null,
+			showModal: false,
+			goodsList: [],
 			titleArray: [
 				{
-					title: '标题1',
+					title: "标题1",
 				},
 				{
-					title: '标题2',
+					title: "标题2",
 				},
 				{
-					title: '标题3',
+					title: "标题3",
 				},
 				{
-					title: '标题4',
+					title: "标题4",
 				},
-			]
+			],
 		};
 	},
 	mounted() {
 		this.init();
+		this.getProductData();
+		document.addEventListener("UniAppJSBridgeReady", () => {
+			window.uni.getEnv((res) => {
+				console.log("----res", JSON.stringify(res));
+			});
+		});
 	},
 	methods: {
 		showToast() {
-			console.log("------=======>点击触发", this.vr);
-			// Toast.success('点击触发成功')
-			Dialog.alert({
-				title: "看你喜好",
-				message: "触发一切",
-			}).then(() => {
-				// on close
-				this.vr.loadScene('room') // 加载已有场景
-			});
+			this.showModal = true;
 		},
-		domForDialog(){
+		goDetail(item){
+			window.uni.navigateTo({
+				url: '/pages/activeDetail/activeDetail?id='+item.productId
+			})
+		},
+		async getProductData() {
+			let res = await this.$axios.get('/product/getByCategory', {type: 0})
+			// let res = await this.$axios.post("/translation");
+			// let { data } = res.data;
+			if (res.code == 200) {
+				this.goodsList = res.data || [];
+			} else {
+				this.$toast("获取商品列表失败");
+			}
+			console.log(res);
+		},
+		domForDialog() {
 			return `
 				<ul>
-					${
-						this.titleArray.map(item=>{
-							return `<li class="dialog-item">${item.title}</li>`
-						}).join('')
-					}
+					${this.titleArray
+						.map((item) => {
+							return `<li class="dialog-item">${item.title}</li>`;
+						})
+						.join("")}
 				</ul>	
-			`
+			`;
 		},
 
 		init() {
@@ -63,7 +104,7 @@ export default {
 					firstScene: "living", // 设置首次显示场景
 					// sceneFadeDuration: 2000, // 场景切换过渡时间
 					autoLoad: true, // 自动加载
-					hotSpotDebug: true, // 热点调试
+					// hotSpotDebug: true, // 热点调试
 				},
 				scenes: {
 					// 场景 - 客厅
@@ -86,14 +127,13 @@ export default {
 								type: "scene",
 								sceneId: "room",
 							},
-							{
-								pitch: -14,
-								yaw: -0.49,
-								// text: "测试点击",
-								type: "info",
-								text: this.domForDialog(),
-								// clickHandlerFunc: this.showToast,
-							},
+							// {
+							// 	pitch: -14,
+							// 	yaw: -10,
+							// 	// text: "测试点击",
+							// 	type: "info",
+							// 	clickHandlerFunc: this.showToast,
+							// },
 						],
 					},
 
@@ -120,6 +160,13 @@ export default {
 								type: "scene",
 								sceneId: "living",
 							},
+							{
+								pitch: -14,
+								yaw: -220,
+								// text: "测试点击",
+								type: "info",
+								clickHandlerFunc: this.showToast,
+							},
 						],
 					},
 				},
@@ -136,23 +183,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#container {
-	position: relative;
-	.loading {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		font-size: 30px;
-	}
-
-	::v-deep{
-		.dialog-item{
-			width: 50px;
-			height: 30px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-	}
-}
+@import "./home.less";
 </style>
