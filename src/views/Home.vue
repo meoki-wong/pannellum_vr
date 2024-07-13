@@ -104,6 +104,7 @@ export default {
 					firstScene: "living", // 设置首次显示场景
 					// sceneFadeDuration: 2000, // 场景切换过渡时间
 					autoLoad: true, // 自动加载
+					orientationOnByDefault: true, // 默认开启罗盘
 					// hotSpotDebug: true, // 热点调试
 				},
 				scenes: {
